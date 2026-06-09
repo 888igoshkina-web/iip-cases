@@ -157,6 +157,108 @@ body{font-family:'Manrope',sans-serif;background:var(--bg);color:var(--text);dis
 .lightbox-img{max-width:90vw;max-height:88vh;border-radius:8px;box-shadow:0 8px 40px rgba(0,0,0,.5)}
 .lightbox-close{position:absolute;top:20px;right:28px;color:#FAFAFA;font-size:36px;cursor:pointer;line-height:1;opacity:.8}
 .lightbox-close:hover{opacity:1}
+
+/* ===== MOBILE ADAPTATION ===== */
+@media (max-width: 768px) {
+  body { flex-direction: column; overflow: auto; height: auto; }
+
+  /* Sidebar becomes top nav bar */
+  .sidebar {
+    width: 100% !important;
+    min-width: 0 !important;
+    height: auto !important;
+    flex-direction: row !important;
+    align-items: center !important;
+    padding: 10px 14px !important;
+    gap: 0 !important;
+    overflow: visible !important;
+    position: sticky;
+    top: 0;
+    z-index: 100;
+    flex-wrap: nowrap;
+  }
+  .sidebar-logo { padding: 0; margin-right: auto; white-space: nowrap; }
+  .sidebar-logo span { display: none; }
+  .sidebar-divider { display: none; }
+  .sidebar-section { display: none; }
+
+  /* Nav items become icon buttons in a row */
+  nav { display: flex; flex-direction: row !important; gap: 4px !important; }
+  .nav-item {
+    padding: 7px 10px !important;
+    font-size: 12px !important;
+    white-space: nowrap;
+    border-radius: 8px !important;
+  }
+  .nav-item svg { display: none; }
+  .nav-item span { display: none; }
+
+  /* Main content full width */
+  .main {
+    padding: 12px !important;
+    gap: 10px !important;
+    overflow: visible !important;
+    height: auto !important;
+  }
+
+  /* Topbar: stack search below title */
+  .topbar {
+    flex-direction: column !important;
+    align-items: stretch !important;
+    gap: 8px !important;
+  }
+  .topbar h2 { font-size: 18px !important; }
+  .search-wrap { max-width: 100% !important; }
+
+  /* Tabs: horizontal scroll */
+  .tabs {
+    overflow-x: auto;
+    flex-wrap: nowrap !important;
+    -webkit-overflow-scrolling: touch;
+    padding: 3px !important;
+    scrollbar-width: none;
+  }
+  .tabs::-webkit-scrollbar { display: none; }
+  .tab-btn { white-space: nowrap; font-size: 12px !important; padding: 7px 10px !important; }
+
+  /* Filters: horizontal scroll */
+  .filters {
+    overflow-x: auto;
+    flex-wrap: nowrap !important;
+    -webkit-overflow-scrolling: touch;
+    scrollbar-width: none;
+    padding-bottom: 4px;
+  }
+  .filters::-webkit-scrollbar { display: none; }
+  .filter-btn { white-space: nowrap; font-size: 12px !important; }
+
+  /* Cards: 1 column full width */
+  .cases-grid {
+    grid-template-columns: 1fr !important;
+    gap: 10px !important;
+  }
+
+  /* Expanded card: full width */
+  .case-card.expanded { max-width: 100% !important; }
+
+  /* Expanded actions: wrap */
+  .expanded-actions { flex-wrap: wrap !important; gap: 8px !important; }
+  .expanded-actions .btn { font-size: 12px !important; padding: 8px 14px !important; }
+
+  /* Stats grid: 2 columns */
+  .stats-grid { grid-template-columns: repeat(2, 1fr) !important; }
+  .chart-grid { grid-template-columns: 1fr !important; }
+
+  /* Search screen */
+  .ai-input-row { flex-direction: column !important; }
+  .ai-input-row input { width: 100% !important; }
+  .ai-input-row .btn { width: 100% !important; }
+
+  /* Modal */
+  .modal { width: 95vw !important; max-height: 90vh !important; padding: 20px 16px !important; }
+  .form-row { grid-template-columns: 1fr !important; }
+}
+
 </style>
 </head>
 <body>
@@ -164,7 +266,7 @@ body{font-family:'Manrope',sans-serif;background:var(--bg);color:var(--text);dis
 <aside class="sidebar">
   <div class="sidebar-logo">ИИП<span>База кейсов</span></div>
   <nav style="display:flex;flex-direction:column;gap:3px">
-    <button class="nav-item active" id="nav-cases" onclick="showScreen('cases')">
+    <button class="nav-item active" id="nav-cases" onclick="showScreen('cases')" data-label="Кейсы">
       <svg fill="none" stroke="currentColor" stroke-width="1.6" viewBox="0 0 24 24"><rect x="3" y="3" width="7" height="7" rx="1"/><rect x="14" y="3" width="7" height="7" rx="1"/><rect x="3" y="14" width="7" height="7" rx="1"/><rect x="14" y="14" width="7" height="7" rx="1"/></svg>
       Все кейсы
     </button>
