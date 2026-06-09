@@ -116,9 +116,7 @@ body{font-family:'Manrope',sans-serif;background:var(--bg);color:var(--text);dis
 .btn-ghost{background:none;border:none;color:var(--text3);font-size:13px;cursor:pointer;font-family:'Manrope',sans-serif}
 .btn-ghost:hover{color:var(--text)}
 /* Pitch box */
-.pitch-box{background:var(--biscuit);border-radius:var(--radius-sm);padding:14px;margin-top:12px;font-size:13px;line-height:1.6;color:var(--text2)}
-.pitch-box.hidden{display:none}
-.pitch-box.loading{color:var(--text3);font-style:italic}
+
 /* Empty state */
 .empty-state{text-align:center;padding:60px 20px;color:var(--text3)}
 .empty-state svg{width:48px;height:48px;opacity:.3;margin-bottom:12px}
@@ -168,20 +166,16 @@ body{font-family:'Manrope',sans-serif;background:var(--bg);color:var(--text);dis
       <svg fill="none" stroke="currentColor" stroke-width="1.6" viewBox="0 0 24 24"><rect x="3" y="3" width="7" height="7" rx="1"/><rect x="14" y="3" width="7" height="7" rx="1"/><rect x="3" y="14" width="7" height="7" rx="1"/><rect x="14" y="14" width="7" height="7" rx="1"/></svg>
       Все кейсы
     </button>
-    <button class="nav-item" onclick="showScreen('search')">
+    <button class="nav-item" id="nav-search" onclick="showScreen('search')">
       <svg fill="none" stroke="currentColor" stroke-width="1.6" viewBox="0 0 24 24"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35"/></svg>
-      AI-поиск
+      Поиск по кейсам
     </button>
     <button class="nav-item" onclick="showScreen('dashboard')">
       <svg fill="none" stroke="currentColor" stroke-width="1.6" viewBox="0 0 24 24"><path d="M18 20V10M12 20V4M6 20v-6"/></svg>
       Дашборд
     </button>
   </nav>
-  <div class="sidebar-divider"></div>
-  <button class="nav-item" onclick="openAddModal()">
-    <svg fill="none" stroke="currentColor" stroke-width="1.6" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><path d="M12 8v8M8 12h8"/></svg>
-    Добавить кейс
-  </button>
+
 </aside>
 
 <main class="main">
@@ -214,9 +208,9 @@ body{font-family:'Manrope',sans-serif;background:var(--bg);color:var(--text);dis
   <div class="screen" id="screen-search">
     <div class="topbar"><h2>AI-поиск по кейсам</h2></div>
     <div class="ai-search-box">
-      <p style="font-size:13px;color:var(--text3);margin-bottom:12px">Опишите ситуацию клиента — AI найдёт похожие кейсы из базы</p>
+      <p style="font-size:13px;color:var(--text3);margin-bottom:12px">Введите ключевые слова — поиск найдёт похожие кейсы из базы</p>
       <div class="ai-input-row">
-        <input type="text" id="ai-query" placeholder="Например: клиент хочет защитить бренд суши-ресторана, уже есть похожий знак..." onkeydown="if(event.key==='Enter')doAISearch()">
+        <input type="text" id="ai-query" placeholder="Например: суши-ресторан, отказ Роспатента, маркетплейс..." onkeydown="if(event.key==='Enter')doAISearch()">
         <button class="btn btn-primary" onclick="doAISearch()">Найти</button>
       </div>
       <p id="ai-status" style="font-size:12px;color:var(--text3);margin-top:8px"></p>
@@ -234,40 +228,6 @@ body{font-family:'Manrope',sans-serif;background:var(--bg);color:var(--text);dis
     </div>
   </div>
 </main>
-
-<!-- Add modal -->
-<div class="modal-overlay" id="modal">
-  <div class="modal">
-    <h3 id="modal-title">Добавить кейс</h3>
-    <div class="form-row">
-      <div class="form-group">
-        <label>Вкладка</label>
-        <select id="f-tab">
-          <option value="tz">Товарный знак</option>
-          <option value="rf">Патент РФ</option>
-          <option value="ea">Евразийский патент</option>
-          <option value="mc">Реестр Минцифры</option>
-          <option value="mtk">Статус МТК</option>
-          <option value="sk">Сколково</option>
-        </select>
-      </div>
-      <div class="form-group">
-        <label>Год</label>
-        <input type="number" id="f-year" value="2026" min="2020" max="2030">
-      </div>
-    </div>
-    <div class="form-group"><label>Заголовок</label><input type="text" id="f-title" placeholder="Зарегистрировали бренд «X» для..."></div>
-    <div class="form-group"><label>Тип</label><input type="text" id="f-type" placeholder="Товарный знак / Патент на изобретение..."></div>
-    <div class="form-group"><label>Отрасль</label><input type="text" id="f-industry" placeholder="Медицина / Маркетплейсы..."></div>
-    <div class="form-group"><label>Текст кейса</label><textarea id="f-text" rows="6" placeholder="Полное описание кейса..."></textarea></div>
-    <div class="form-group"><label>Классы МКТУ (через запятую)</label><input type="text" id="f-mktu" placeholder="25, 35, 41"></div>
-    <div class="form-group"><label>Теги (через запятую)</label><input type="text" id="f-tags" placeholder="маркетплейс, отказ Роспатента"></div>
-    <div style="display:flex;gap:10px;justify-content:flex-end;margin-top:8px">
-      <button class="btn btn-ghost" onclick="closeModal()">Отмена</button>
-      <button class="btn btn-primary" onclick="saveCase()">Сохранить</button>
-    </div>
-  </div>
-</div>
 
 <!-- Lightbox -->
 <div class="lightbox" id="lightbox" onclick="closeLightbox(event)">
@@ -420,7 +380,6 @@ function renderCard(c) {
     return out;
   }
   const textHtml = renderText(c.text||'');
-  const pitchId = 'pitch-'+c.id;
   const preview = (c.text||'').slice(0,220) + ((c.text||'').length>220?'…':'');
 
   // МКТУ и срок в тёмной шапке
@@ -450,11 +409,8 @@ function renderCard(c) {
       ${imgsHtml}
       <div class="expanded-text">${textHtml}</div>
       <div class="expanded-actions">
-        <button class="btn btn-primary" onclick="event.stopPropagation();generatePitch('${c.id}')">✦ Сгенерировать питч</button>
-        <button class="btn btn-secondary" onclick="event.stopPropagation();openEditModal('${c.id}')">Редактировать</button>
         <button class="btn-ghost" onclick="event.stopPropagation();toggleCard('${c.id}',event)">Свернуть</button>
       </div>
-      <div class="pitch-box hidden" id="${pitchId}"></div>
     </div>
   </div>`;
 }
@@ -495,64 +451,6 @@ function deleteCase(id) {
   saveCases(); renderCases();
 }
 
-function openAddModal() {
-  editingId = null;
-  document.getElementById('modal-title').textContent = 'Добавить кейс';
-  ['f-title','f-type','f-industry','f-text','f-mktu','f-tags'].forEach(id=>{
-    document.getElementById(id).value = '';
-  });
-  document.getElementById('f-year').value = 2026;
-  document.getElementById('f-tab').value = currentTab;
-  document.getElementById('modal').classList.add('open');
-}
-
-function openEditModal(id) {
-  const c = cases.find(x=>x.id===id);
-  if(!c) return;
-  editingId = id;
-  document.getElementById('modal-title').textContent = 'Редактировать кейс';
-  document.getElementById('f-title').value = c.title||'';
-  document.getElementById('f-type').value = c.type||'';
-  document.getElementById('f-industry').value = c.industry||'';
-  document.getElementById('f-text').value = c.text||'';
-  document.getElementById('f-mktu').value = (c.mktu||[]).join(', ');
-  document.getElementById('f-tags').value = (c.tags||[]).join(', ');
-  document.getElementById('f-year').value = c.year||2026;
-  document.getElementById('f-tab').value = currentTab;
-  document.getElementById('modal').classList.add('open');
-}
-
-function closeModal() {
-  document.getElementById('modal').classList.remove('open');
-  editingId = null;
-}
-
-function saveCase() {
-  const title = document.getElementById('f-title').value.trim();
-  if(!title) return alert('Введите заголовок');
-  const mktuRaw = document.getElementById('f-mktu').value.trim();
-  const tagsRaw = document.getElementById('f-tags').value.trim();
-  const newCase = {
-    id: editingId || (document.getElementById('f-tab').value + Date.now()),
-    num: Date.now(),
-    title,
-    year: parseInt(document.getElementById('f-year').value)||2026,
-    type: document.getElementById('f-type').value.trim()||'Кейс',
-    industry: document.getElementById('f-industry').value.trim()||'Различные товары',
-    text: document.getElementById('f-text').value.trim(),
-    quote: '', tags: tagsRaw ? tagsRaw.split(',').map(t=>t.trim()).filter(Boolean) : [],
-    mktu: mktuRaw ? mktuRaw.split(',').map(t=>t.trim()).filter(Boolean) : [],
-    metrics: []
-  };
-  if(editingId) {
-    const idx = cases.findIndex(c=>c.id===editingId);
-    if(idx>=0) cases[idx] = newCase;
-  } else {
-    cases.unshift(newCase);
-  }
-  saveCases(); closeModal(); renderCases();
-}
-
 function renderDashboard() {
   const allC = Object.values(ALL_CASES).flat();
   const total = allC.length;
@@ -591,27 +489,6 @@ function showScreen(name) {
   document.getElementById('nav-'+name)?.classList.add('active');
   if(name==='dashboard') renderDashboard();
 }
-
-async function generatePitch(id) {
-  const c = cases.find(x=>x.id===id);
-  if(!c) return;
-  const box = document.getElementById('pitch-'+id);
-  box.classList.remove('hidden');
-  box.className = 'pitch-box loading';
-  box.textContent = 'Генерирую питч...';
-  try {
-    const res = await fetch('https://api.anthropic.com/v1/messages',{
-      method:'POST',headers:{'Content-Type':'application/json'},
-      body:JSON.stringify({model:'claude-sonnet-4-20250514',max_tokens:500,
-        system:'Ты маркетолог патентного бюро ИИП. Напиши короткий продающий питч для клиента на основе кейса — 3-4 предложения, тон профессиональный но живой, акцент на результат. Только текст, без заголовков.',
-        messages:[{role:'user',content:`Кейс: ${c.title}. Тип ИС: ${c.type}. Текст: ${(c.text||'').slice(0,400)}`}]})
-    });
-    const data = await res.json();
-    box.className = 'pitch-box';
-    box.textContent = data.content?.[0]?.text||'Ошибка генерации';
-  } catch(e) { box.className='pitch-box'; box.textContent='Ошибка подключения к API'; }
-}
-
 
 const SYNONYMS = {
   'кафе':['общепит','ресторан','кафе','суши','еда','питани'],
@@ -657,27 +534,41 @@ function scoreCase(c, tokens) {
   return score;
 }
 
-async function doAISearch() {
+function doAISearch() {
   const q = document.getElementById('ai-query').value.trim();
   if(!q) return;
   const status = document.getElementById('ai-status');
   const result = document.getElementById('ai-result');
-  status.textContent = 'Анализирую...';
+  status.textContent = '';
   result.classList.add('hidden');
-  try {
-    const allC = Object.values(ALL_CASES).flat();
-    const summary = allC.map(c=>`[${c.id}] "${c.title}" — ${c.type}, ${c.industry}. ${(c.text||'').slice(0,100)}`).join('\n');
-    const res = await fetch('https://api.anthropic.com/v1/messages',{
-      method:'POST',headers:{'Content-Type':'application/json'},
-      body:JSON.stringify({model:'claude-sonnet-4-20250514',max_tokens:600,
-        system:'Ты консультант патентного бюро ИИП. На основе запроса клиента найди 1-3 наиболее подходящих кейса из базы. Объясни кратко, почему они релевантны. Текст на русском, профессиональный.',
-        messages:[{role:'user',content:`Запрос: ${q}\n\nБаза кейсов:\n${summary}`}]})
-    });
-    const data = await res.json();
-    status.textContent='';
+
+  const qLower = q.toLowerCase();
+  const rawTokens = qLower.split(/\s+/).filter(t=>t.length>2);
+  const expandedTokens = new Set(rawTokens);
+  for (const tok of rawTokens) {
+    for (const [key, syns] of Object.entries(SYNONYMS)) {
+      if (key.includes(tok) || tok.includes(key)) syns.forEach(s=>expandedTokens.add(s));
+    }
+  }
+  const tokens = [...expandedTokens];
+  const allC = Object.values(ALL_CASES).flat();
+  const scored = allC.map(c=>({c, score:scoreCase(c,tokens)})).filter(x=>x.score>0).sort((a,b)=>b.score-a.score).slice(0,8);
+
+  if (scored.length===0) {
     result.classList.remove('hidden');
-    result.innerHTML=(data.content?.[0]?.text||'Не удалось найти').replace(/\n/g,'<br>');
-  } catch(e) { status.textContent='Ошибка подключения'; }
+    result.innerHTML='<p style="color:var(--text3);font-size:13px">Кейсов не найдено. Попробуйте другие слова.</p>';
+    return;
+  }
+
+  const foundHtml = scored.map(({c})=>`
+    <div style="border:1px solid var(--border);border-radius:8px;padding:10px 12px;margin-bottom:8px;cursor:pointer" onclick="showCaseFromSearch('${c.id}')">
+      <div style="font-weight:600;font-size:13px;color:var(--text);margin-bottom:3px">${c.title}</div>
+      <div style="font-size:11px;color:var(--text3)">${c.type} · ${c.industry}</div>
+      <div style="font-size:12px;color:var(--text2);margin-top:5px">${(c.text||'').slice(0,150)}…</div>
+    </div>`).join('');
+
+  result.classList.remove('hidden');
+  result.innerHTML=`<p style="font-size:12px;color:var(--text3);margin-bottom:8px">Найдено ${scored.length} кейс(а) — нажмите для открытия:</p>${foundHtml}`;
 }
 
 function openLightbox(src) {
@@ -694,7 +585,6 @@ function closeLightbox(e) {
 }
 document.addEventListener('keydown',e=>{ if(e.key==='Escape'){ document.getElementById('lightbox').classList.remove('open'); document.body.style.overflow=''; }});
 
-document.getElementById('modal').addEventListener('click',function(e){ if(e.target===this) closeModal(); });
 
 loadCases();
 renderFilters();
