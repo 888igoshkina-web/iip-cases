@@ -157,6 +157,7 @@ body{font-family:'Manrope',sans-serif;background:var(--bg);color:var(--text);dis
 .lightbox-img{max-width:90vw;max-height:88vh;border-radius:8px;box-shadow:0 8px 40px rgba(0,0,0,.5)}
 .lightbox-close{position:absolute;top:20px;right:28px;color:#FAFAFA;font-size:36px;cursor:pointer;line-height:1;opacity:.8}
 .lightbox-close:hover{opacity:1}
+@keyframes spin{to{transform:rotate(360deg)}}
 
 /* ===== MOBILE ===== */
 @media (max-width: 768px) {
@@ -204,11 +205,15 @@ body{font-family:'Manrope',sans-serif;background:var(--bg);color:var(--text);dis
       <svg fill="none" stroke="currentColor" stroke-width="1.6" viewBox="0 0 24 24"><rect x="3" y="3" width="7" height="7" rx="1"/><rect x="14" y="3" width="7" height="7" rx="1"/><rect x="3" y="14" width="7" height="7" rx="1"/><rect x="14" y="14" width="7" height="7" rx="1"/></svg>
       Все кейсы
     </button>
-    <button class="nav-item" onclick="showScreen('search')">
+    <button class="nav-item" id="nav-search" onclick="showScreen('search')">
       <svg fill="none" stroke="currentColor" stroke-width="1.6" viewBox="0 0 24 24"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35"/></svg>
       Поиск по кейсам
     </button>
-    <button class="nav-item" onclick="showScreen('dashboard')">
+    <button class="nav-item" id="nav-aimatch" onclick="showScreen('aimatch')">
+      <svg fill="none" stroke="currentColor" stroke-width="1.6" viewBox="0 0 24 24"><path d="M12 2a10 10 0 1 0 0 20A10 10 0 0 0 12 2z"/><path d="M12 8v4l3 3"/></svg>
+      ИИ-подбор кейса
+    </button>
+    <button class="nav-item" id="nav-dashboard" onclick="showScreen('dashboard')">
       <svg fill="none" stroke="currentColor" stroke-width="1.6" viewBox="0 0 24 24"><path d="M18 20V10M12 20V4M6 20v-6"/></svg>
       Дашборд
     </button>
@@ -253,6 +258,25 @@ body{font-family:'Manrope',sans-serif;background:var(--bg);color:var(--text);dis
       </div>
       <p id="ai-status" style="font-size:12px;color:var(--text3);margin-top:8px"></p>
       <div id="ai-result" class="hidden"></div>
+    </div>
+  </div>
+
+  <!-- AI Match screen -->
+  <div class="screen" id="screen-aimatch">
+    <div class="topbar"><h2>ИИ-подбор кейса</h2></div>
+    <div class="ai-search-box">
+      <p style="font-size:13px;color:var(--text3);margin-bottom:4px;font-weight:500">Опишите бизнес вашего клиента</p>
+      <p style="font-size:12px;color:var(--text3);margin-bottom:14px">ИИ найдёт наиболее релевантный кейс и объяснит, почему он важен именно для этого клиента</p>
+      <div class="ai-input-row" style="align-items:flex-start">
+        <textarea id="aimatch-query" placeholder="Например: клиент открывает сеть суши-ресторанов в Москве, уже есть название бренда, планирует выход на маркетплейсы и франшизу..." style="flex:1;min-height:80px;padding:10px 14px;border:1.5px solid var(--border);border-radius:var(--radius-sm);font-size:14px;font-family:'Manrope',sans-serif;outline:none;resize:vertical" oninput="this.style.borderColor='var(--border)'" onkeydown="if(event.ctrlKey&&event.key==='Enter'){event.preventDefault();doAIMatch()}"></textarea>
+        <button class="btn btn-primary" onclick="doAIMatch()" style="white-space:nowrap;padding:10px 20px">Подобрать кейс</button>
+      </div>
+      <p style="font-size:11px;color:var(--text3);margin-top:6px">Ctrl+Enter для отправки</p>
+      <div id="aimatch-loading" style="display:none;margin-top:20px;text-align:center;color:var(--text3);font-size:13px">
+        <div style="display:inline-block;width:20px;height:20px;border:2px solid var(--border);border-top-color:var(--accent2);border-radius:50%;animation:spin .8s linear infinite;margin-right:8px;vertical-align:middle"></div>
+        ИИ анализирует базу кейсов...
+      </div>
+      <div id="aimatch-result" style="display:none;margin-top:20px"></div>
     </div>
   </div>
 
@@ -492,6 +516,7 @@ function renderCard(c) {
       <div class="expanded-actions">
         <button class="btn-ghost" onclick="event.stopPropagation();toggleCard('${c.id}',event)">Свернуть</button>
         <button class="btn btn-secondary" id="copy-${c.id}" onclick="event.stopPropagation();copyCase('${c.id}')">Скопировать</button>
+        <button class="btn btn-primary" onclick="event.stopPropagation();exportCasePDF('${c.id}')">📄 Экспорт в PDF</button>
       </div>
       <div class="pitch-box hidden" id="${pitchId}"></div>
     </div>
@@ -731,6 +756,146 @@ function copyCase(id) {
   else { fb(content); done(); }
   function fb(txt){ const ta=document.createElement('textarea'); ta.value=txt; ta.style.cssText='position:fixed;opacity:0'; document.body.appendChild(ta); ta.select(); document.execCommand('copy'); document.body.removeChild(ta); }
 }
+
+async function doAIMatch() {
+  const q = document.getElementById('aimatch-query').value.trim();
+  if(!q) { document.getElementById('aimatch-query').style.borderColor='var(--accent2)'; return; }
+  const loadEl = document.getElementById('aimatch-loading');
+  const resultEl = document.getElementById('aimatch-result');
+  loadEl.style.display='block';
+  resultEl.style.display='none';
+
+  const allC = Object.values(ALL_CASES).flat();
+  const caseList = allC.map(c=>`[${c.id}] ${c.title} | ${c.type} | ${c.industry} | ${(c.tags||[]).join(',')} | ${(c.text||'').slice(0,200)}`).join('\n');
+
+  const prompt = `Ты эксперт патентного бюро ИИП по защите интеллектуальной собственности. Потенциальный клиент описал свой бизнес:\n"${q}"\n\nВот база реальных кейсов бюро (формат: [id] заголовок | тип | отрасль | теги | начало описания):\n${caseList}\n\nЗадача:\n1. Выбери 1-2 наиболее релевантных кейса для этого клиента.\n2. Для каждого кейса объясни кратко: почему он похож на ситуацию клиента и что это означает для его бизнеса конкретно.\n3. Дай 2-3 вопроса для уточнения на первой встрече с клиентом.\n\nОтвечай на русском. Упоминай конкретные id кейсов в формате [id].`;
+
+  try {
+    const resp = await fetch('https://api.anthropic.com/v1/messages', {
+      method:'POST',
+      headers:{'Content-Type':'application/json'},
+      body: JSON.stringify({ model:'claude-sonnet-4-6', max_tokens:1000, messages:[{role:'user',content:prompt}] })
+    });
+    const data = await resp.json();
+    const text = (data.content||[]).map(b=>b.text||'').join('');
+    const mentionedIds = [...text.matchAll(/\[([a-z]{2}\d+)\]/g)].map(m=>m[1]);
+    const matchedCases = allC.filter(c=>mentionedIds.includes(c.id));
+
+    let html = `<div style="background:var(--biscuit);border-radius:var(--radius-sm);padding:18px 20px;margin-bottom:16px">
+      <div style="font-size:13px;color:var(--text2);line-height:1.75;white-space:pre-wrap">${text.replace(/\[([a-z]{2}\d+)\]/g, '')}</div>
+    </div>`;
+
+    if(matchedCases.length) {
+      html += `<p style="font-size:12px;font-weight:600;color:var(--text3);text-transform:uppercase;letter-spacing:.07em;margin-bottom:10px">Найденные кейсы — нажмите для открытия:</p>`;
+      html += matchedCases.map(c=>`
+        <div onclick="showCaseFromSearch('${c.id}')" style="border:1.5px solid var(--border);border-radius:10px;padding:12px 14px;margin-bottom:8px;cursor:pointer;background:var(--surface);transition:.15s" onmouseover="this.style.borderColor='var(--accent2)'" onmouseout="this.style.borderColor='var(--border)'">
+          <div style="font-weight:700;font-size:14px;color:var(--text)">${c.title}</div>
+          <div style="font-size:11px;color:var(--text3);margin:3px 0">${c.type} · ${c.industry}</div>
+          <div style="font-size:12px;color:var(--text2);margin-top:4px">${(c.text||'').slice(0,160)}…</div>
+        </div>`).join('');
+    }
+    resultEl.innerHTML = html;
+    resultEl.style.display='block';
+  } catch(e) {
+    resultEl.innerHTML = `<p style="color:#c0392b;font-size:13px">Ошибка запроса к ИИ: ${e.message}</p>`;
+    resultEl.style.display='block';
+  }
+  loadEl.style.display='none';
+}
+
+function exportCasePDF(id) {
+  const allC = Object.values(ALL_CASES).flat();
+  const c = allC.find(x=>x.id===id);
+  if(!c) return;
+
+  const metrics = (c.metrics||[]).filter(m=>m.l!=='срок').map(m=>`
+    <div style="text-align:center;background:#F5F5F3;border-radius:8px;padding:10px 16px;min-width:80px">
+      <div style="font-size:22px;font-weight:700;color:#151E34">${m.v}</div>
+      <div style="font-size:11px;color:#6B7A99;margin-top:3px">${m.l}</div>
+    </div>`).join('');
+
+  const tags = (c.tags||[]).map(t=>`<span style="display:inline-block;background:#ECF1F3;color:#151E34;border-radius:20px;padding:3px 10px;font-size:11px;font-weight:500;margin:2px">${t}</span>`).join('');
+
+  function renderTextPlain(raw) {
+    if(!raw) return '';
+    return raw.split('\n').map(line=>{
+      const t = line.trim();
+      if(!t) return '<div style="height:6px"></div>';
+      if(/^[•·]\s/.test(t)) return `<div style="padding-left:16px;position:relative;margin:2px 0;font-size:13px;color:#1F2C4D;line-height:1.6"><span style="position:absolute;left:2px">•</span>${t.slice(2)}</div>`;
+      return `<div style="font-size:13px;color:#1F2C4D;line-height:1.65;margin:0 0 4px">${t}</div>`;
+    }).join('');
+  }
+
+  const pdfWin = window.open('','_blank','width=860,height=900');
+  pdfWin.document.write(`<!DOCTYPE html>
+<html lang="ru"><head><meta charset="UTF-8">
+<title>${c.title}</title>
+<link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+body{font-family:'Manrope',sans-serif;background:#fff;color:#151E34}
+.page{max-width:720px;margin:0 auto;padding:48px 40px}
+.header{background:#151E34;border-radius:12px;padding:28px 32px;margin-bottom:28px}
+.logo{font-size:20px;font-weight:700;color:#fff;letter-spacing:.02em}
+.logo span{color:#B3C7D0;font-size:11px;display:block;font-weight:400;margin-top:2px}
+.case-type-badge{display:inline-block;background:rgba(179,199,208,.2);color:#B3C7D0;border-radius:20px;padding:3px 12px;font-size:11px;font-weight:500;margin-top:12px}
+.case-title{font-size:20px;font-weight:700;color:#fff;margin-top:10px;line-height:1.35}
+.metrics-row{display:flex;gap:12px;flex-wrap:wrap;margin-bottom:22px}
+.section-label{font-size:10px;font-weight:600;color:#6B7A99;text-transform:uppercase;letter-spacing:.1em;margin-bottom:8px}
+.content-box{background:#FAFAFA;border:1px solid #E5E9EF;border-radius:10px;padding:20px 22px;margin-bottom:24px}
+.footer-bar{border-top:1px solid #E5E9EF;padding-top:18px;margin-top:8px;display:flex;justify-content:space-between;align-items:center}
+.print-btn{position:fixed;top:20px;right:20px;background:#151E34;color:#fff;border:none;padding:10px 20px;border-radius:8px;font-size:13px;font-weight:600;cursor:pointer;font-family:'Manrope',sans-serif;box-shadow:0 4px 12px rgba(21,30,52,.25)}
+.print-btn:hover{background:#273861}
+@media print{.print-btn{display:none}.page{padding:32px 28px}}
+</style></head><body>
+<button class="print-btn" onclick="window.print()">🖨 Сохранить PDF</button>
+<div class="page">
+  <div class="header">
+    <div class="logo">ИИП<span>Институт Инноваций и Права</span></div>
+    <div class="case-type-badge">${c.type} &nbsp;·&nbsp; ${c.industry} &nbsp;·&nbsp; ${c.year}</div>
+    <div class="case-title">${c.title}</div>
+  </div>
+  ${metrics ? `<div class="section-label">Ключевые результаты</div><div class="metrics-row">${metrics}</div>` : ''}
+  ${tags ? `<div style="margin-bottom:20px"><div class="section-label">Теги</div><div>${tags}</div></div>` : ''}
+  <div class="section-label">Описание кейса</div>
+  <div class="content-box">${renderTextPlain(c.text)}</div>
+  <div style="background:#F8F7F5;border-radius:10px;padding:18px 22px;margin-bottom:24px;border:1px solid #E8E5E0">
+    <div style="font-size:10px;font-weight:700;color:#6B7A99;text-transform:uppercase;letter-spacing:.12em;margin-bottom:14px">Признание и рейтинги</div>
+    <div style="display:flex;flex-wrap:wrap;gap:10px;margin-bottom:14px">
+      <div style="background:#fff;border:1px solid #E5E9EF;border-radius:8px;padding:8px 14px;font-size:12px;color:#151E34;font-weight:600;line-height:1.4">
+        🏆 Право-300<br><span style="font-weight:400;color:#6B7A99;font-size:11px">ТОП-50 · 3 номинации · 2 года подряд</span>
+      </div>
+      <div style="background:#fff;border:1px solid #E5E9EF;border-radius:8px;padding:8px 14px;font-size:12px;color:#151E34;font-weight:600;line-height:1.4">
+        🥇 Коммерсант 2026<br><span style="font-weight:400;color:#6B7A99;font-size:11px">Лидеры рынка юридических услуг</span>
+      </div>
+      <div style="background:#fff;border:1px solid #E5E9EF;border-radius:8px;padding:8px 14px;font-size:12px;color:#151E34;font-weight:600;line-height:1.4">
+        🥈 Архимед 2026<br><span style="font-weight:400;color:#6B7A99;font-size:11px">Серебряная медаль · Патентный ассистент</span>
+      </div>
+      <div style="background:#fff;border:1px solid #E5E9EF;border-radius:8px;padding:8px 14px;font-size:12px;color:#151E34;font-weight:600;line-height:1.4">
+        🎖 IP Russia Awards 2024<br><span style="font-weight:400;color:#6B7A99;font-size:11px">Призёры в 2-х номинациях</span>
+      </div>
+      <div style="background:#fff;border:1px solid #E5E9EF;border-radius:8px;padding:8px 14px;font-size:12px;color:#151E34;font-weight:600;line-height:1.4">
+        📋 Российская Газета<br><span style="font-weight:400;color:#6B7A99;font-size:11px">5 экспертов в рейтинге 2 года подряд</span>
+      </div>
+      <div style="background:#fff;border:1px solid #E5E9EF;border-radius:8px;padding:8px 14px;font-size:12px;color:#151E34;font-weight:600;line-height:1.4">
+        🏅 Диплом I степени 2026<br><span style="font-weight:400;color:#6B7A99;font-size:11px">Вклад в развитие ИС · «Созвездие — IP»</span>
+      </div>
+    </div>
+    <div style="font-size:11px;color:#6B7A99;line-height:1.6">
+      Партнёры: <strong style="color:#151E34">ВОИС (WIPO)</strong> · <strong style="color:#151E34">Евразийское патентное ведомство</strong> · <strong style="color:#151E34">Сколково</strong> · <strong style="color:#151E34">Московский Инновационный Кластер</strong>
+    </div>
+  </div>
+  <div class="footer-bar">
+    <div>
+      <div style="font-size:14px;font-weight:700;color:#151E34">ИИП — Институт Инноваций и Права</div>
+      <div style="font-size:11px;color:#6B7A99;margin-top:3px">hello@inilaw.com &nbsp;·&nbsp; 8 (499) 110-93-54 &nbsp;·&nbsp; inilaw.com</div>
+    </div>
+    <div style="font-size:11px;color:#B3C7D0">Кейс ${c.id.toUpperCase()} · ${c.year}</div>
+  </div>
+</div></body></html>`);
+  pdfWin.document.close();
+}
+
 loadCases();
 renderFilters();
 updateTabCounts();
