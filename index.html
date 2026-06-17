@@ -158,6 +158,56 @@ body{font-family:'Manrope',sans-serif;background:var(--bg);color:var(--text);dis
 .lightbox-close{position:absolute;top:20px;right:28px;color:#FAFAFA;font-size:36px;cursor:pointer;line-height:1;opacity:.8}
 .lightbox-close:hover{opacity:1}
 @keyframes spin{to{transform:rotate(360deg)}}
+/* Star button */
+.star-btn{background:none;border:none;cursor:pointer;font-size:16px;padding:2px 4px;line-height:1;opacity:.5;transition:.15s;flex-shrink:0}
+.star-btn:hover{opacity:1;transform:scale(1.2)}
+.star-btn.active{opacity:1}
+/* Share toast */
+.share-toast{position:fixed;bottom:28px;left:50%;transform:translateX(-50%) translateY(20px);background:#151E34;color:#fff;padding:10px 20px;border-radius:8px;font-size:13px;font-weight:500;opacity:0;transition:.25s;pointer-events:none;z-index:9999;white-space:nowrap}
+.share-toast.show{opacity:1;transform:translateX(-50%) translateY(0)}
+/* Favorites */
+.fav-empty{text-align:center;padding:60px 20px;color:var(--text3)}
+.fav-empty svg{width:48px;height:48px;opacity:.25;margin-bottom:12px}
+.client-group{background:var(--surface);border-radius:var(--radius);box-shadow:var(--shadow);overflow:hidden;margin-bottom:16px}
+.client-group-header{display:flex;align-items:center;gap:10px;padding:14px 18px;border-bottom:1px solid var(--bg);cursor:pointer}
+.client-group-name{font-size:15px;font-weight:700;color:var(--text);flex:1}
+.client-group-count{font-size:12px;color:var(--text3)}
+.client-group-body{padding:14px 18px}
+.fav-case-row{display:flex;align-items:flex-start;gap:10px;padding:10px 0;border-bottom:1px solid var(--bg)}
+.fav-case-row:last-child{border-bottom:none}
+.fav-case-info{flex:1;cursor:pointer}
+.fav-case-title{font-size:13px;font-weight:600;color:var(--text);line-height:1.3}
+.fav-case-meta{font-size:11px;color:var(--text3);margin-top:2px}
+.fav-note{width:100%;margin-top:6px;padding:7px 10px;border:1.5px solid var(--border);border-radius:6px;font-size:12px;font-family:'Manrope',sans-serif;color:var(--text);background:var(--bg);resize:none;outline:none;min-height:52px;transition:.15s}
+.fav-note:focus{border-color:var(--accent2);background:#fff}
+.fav-remove{background:none;border:none;color:var(--text3);cursor:pointer;font-size:18px;padding:0 2px;line-height:1;flex-shrink:0}
+.fav-remove:hover{color:#c0392b}
+.new-client-row{display:flex;gap:8px;margin-top:14px}
+.new-client-input{flex:1;padding:8px 12px;border:1.5px solid var(--border);border-radius:var(--radius-sm);font-size:13px;font-family:'Manrope',sans-serif;outline:none;background:var(--surface)}
+.new-client-input:focus{border-color:var(--accent2)}
+/* PPTX select panel */
+.pptx-bar{position:fixed;bottom:0;left:0;right:0;background:#151E34;color:#fff;padding:12px 20px;display:flex;align-items:center;gap:12px;z-index:500;transform:translateY(100%);transition:.25s;box-shadow:0 -4px 20px rgba(21,30,52,.3)}
+.pptx-bar.visible{transform:translateY(0)}
+.pptx-bar-count{font-size:13px;font-weight:600;white-space:nowrap}
+.pptx-bar-cases{flex:1;font-size:11px;color:#B3C7D0;overflow:hidden;white-space:nowrap;text-overflow:ellipsis}
+.pptx-bar-btn{padding:8px 16px;border-radius:8px;font-size:13px;font-weight:600;cursor:pointer;border:none;font-family:'Manrope',sans-serif;white-space:nowrap;flex-shrink:0}
+.pptx-bar-btn.primary{background:#B3C7D0;color:#151E34}
+.pptx-bar-btn.primary:hover{background:#EADED1}
+.pptx-bar-btn.ghost{background:rgba(255,255,255,.1);color:#fff}
+.pptx-bar-btn.ghost:hover{background:rgba(255,255,255,.2)}
+/* Case checkbox */
+.case-check{width:18px;height:18px;border-radius:4px;border:2px solid var(--border);cursor:pointer;flex-shrink:0;display:flex;align-items:center;justify-content:center;transition:.15s;background:var(--surface)}
+.case-check.checked{background:#151E34;border-color:#151E34}
+.case-check.checked::after{content:'✓';color:#fff;font-size:11px;font-weight:700}
+/* PPTX modal */
+.pptx-modal{display:none;position:fixed;inset:0;background:rgba(21,30,52,.5);z-index:2000;align-items:center;justify-content:center}
+.pptx-modal.open{display:flex}
+.pptx-modal-inner{background:var(--surface);border-radius:var(--radius);padding:28px;width:min(440px,90vw);max-height:85vh;overflow-y:auto}
+.pptx-modal-inner h3{font-size:18px;font-weight:700;margin-bottom:6px}
+.pptx-modal-inner p{font-size:13px;color:var(--text3);margin-bottom:18px}
+.pptx-progress{margin-top:16px;font-size:13px;color:var(--text3);text-align:center;display:none}
+.pptx-progress-bar{height:4px;background:var(--border);border-radius:2px;margin-top:8px;overflow:hidden}
+.pptx-progress-fill{height:100%;background:#151E34;border-radius:2px;transition:width .3s;width:0%}
 
 /* ===== MOBILE ===== */
 @media (max-width: 768px) {
@@ -192,11 +242,47 @@ body{font-family:'Manrope',sans-serif;background:var(--bg);color:var(--text);dis
   .ai-input-row { flex-direction: column !important; gap: 8px !important; }
   .ai-input-row input { width: 100% !important; }
   .ai-input-row .btn { width: 100% !important; }
+  .pptx-bar { flex-wrap: wrap !important; gap: 8px !important; padding: 10px 12px !important; }
+  .pptx-bar-cases { display: none !important; }
+  .pptx-bar-btn { font-size: 12px !important; padding: 7px 12px !important; }
+  .new-client-row { flex-direction: column !important; }
+  .fav-note { font-size: 13px !important; }
 }
 
 </style>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/PptxGenJS/3.12.0/pptxgen.bundle.js"></script>
 </head>
 <body>
+
+<div class="share-toast" id="share-toast">Ссылка скопирована ✓</div>
+
+<!-- PPTX floating bar -->
+<div class="pptx-bar" id="pptx-bar">
+  <div class="pptx-bar-count" id="pptx-bar-count">0 кейсов</div>
+  <div class="pptx-bar-cases" id="pptx-bar-names"></div>
+  <button class="pptx-bar-btn ghost" onclick="clearPptxSelection()">✕ Снять</button>
+  <button class="pptx-bar-btn primary" onclick="openPptxModal()">📊 Создать презентацию</button>
+</div>
+
+<!-- PPTX modal -->
+<div class="pptx-modal" id="pptx-modal">
+  <div class="pptx-modal-inner">
+    <h3>Создать презентацию</h3>
+    <p id="pptx-modal-desc">Выбрано кейсов: <b id="pptx-modal-count">0</b></p>
+    <div class="form-group">
+      <label>Название подборки</label>
+      <input type="text" id="pptx-title-input" placeholder="Например: Подборка для ООО Ромашка" value="Подборка кейсов ИИП">
+    </div>
+    <div style="display:flex;gap:10px;flex-wrap:wrap;margin-top:4px">
+      <button class="btn btn-primary" onclick="generatePptx()" id="pptx-gen-btn">📊 Скачать .pptx</button>
+      <button class="btn btn-secondary" onclick="closePptxModal()">Отмена</button>
+    </div>
+    <div class="pptx-progress" id="pptx-progress">
+      <div id="pptx-progress-text">Генерация...</div>
+      <div class="pptx-progress-bar"><div class="pptx-progress-fill" id="pptx-progress-fill"></div></div>
+    </div>
+  </div>
+</div>
 
 <aside class="sidebar">
   <div class="sidebar-logo">ИИП<span>База кейсов</span></div>
@@ -209,13 +295,14 @@ body{font-family:'Manrope',sans-serif;background:var(--bg);color:var(--text);dis
       <svg fill="none" stroke="currentColor" stroke-width="1.6" viewBox="0 0 24 24"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35"/></svg>
       Поиск по кейсам
     </button>
-    <button class="nav-item" id="nav-aimatch" onclick="showScreen('aimatch')">
-      <svg fill="none" stroke="currentColor" stroke-width="1.6" viewBox="0 0 24 24"><path d="M12 2a10 10 0 1 0 0 20A10 10 0 0 0 12 2z"/><path d="M12 8v4l3 3"/></svg>
-      ИИ-подбор кейса
-    </button>
+
     <button class="nav-item" id="nav-dashboard" onclick="showScreen('dashboard')">
       <svg fill="none" stroke="currentColor" stroke-width="1.6" viewBox="0 0 24 24"><path d="M18 20V10M12 20V4M6 20v-6"/></svg>
       Дашборд
+    </button>
+    <button class="nav-item" id="nav-favorites" onclick="showScreen('favorites')">
+      <svg fill="none" stroke="currentColor" stroke-width="1.6" viewBox="0 0 24 24"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg>
+      Мои подборки <span id="fav-nav-count" style="background:rgba(179,199,208,.25);color:#B3C7D0;border-radius:10px;padding:1px 7px;font-size:11px;margin-left:2px"></span>
     </button>
   </nav>
   <div class="sidebar-divider"></div>
@@ -261,23 +348,16 @@ body{font-family:'Manrope',sans-serif;background:var(--bg);color:var(--text);dis
     </div>
   </div>
 
-  <!-- AI Match screen -->
-  <div class="screen" id="screen-aimatch">
-    <div class="topbar"><h2>ИИ-подбор кейса</h2></div>
-    <div class="ai-search-box">
-      <p style="font-size:13px;color:var(--text3);margin-bottom:4px;font-weight:500">Опишите бизнес вашего клиента</p>
-      <p style="font-size:12px;color:var(--text3);margin-bottom:14px">ИИ найдёт наиболее релевантный кейс и объяснит, почему он важен именно для этого клиента</p>
-      <div class="ai-input-row" style="align-items:flex-start">
-        <textarea id="aimatch-query" placeholder="Например: клиент открывает сеть суши-ресторанов в Москве, уже есть название бренда, планирует выход на маркетплейсы и франшизу..." style="flex:1;min-height:80px;padding:10px 14px;border:1.5px solid var(--border);border-radius:var(--radius-sm);font-size:14px;font-family:'Manrope',sans-serif;outline:none;resize:vertical" oninput="this.style.borderColor='var(--border)'" onkeydown="if(event.ctrlKey&&event.key==='Enter'){event.preventDefault();doAIMatch()}"></textarea>
-        <button class="btn btn-primary" onclick="doAIMatch()" style="white-space:nowrap;padding:10px 20px">Подобрать кейс</button>
-      </div>
-      <p style="font-size:11px;color:var(--text3);margin-top:6px">Ctrl+Enter для отправки</p>
-      <div id="aimatch-loading" style="display:none;margin-top:20px;text-align:center;color:var(--text3);font-size:13px">
-        <div style="display:inline-block;width:20px;height:20px;border:2px solid var(--border);border-top-color:var(--accent2);border-radius:50%;animation:spin .8s linear infinite;margin-right:8px;vertical-align:middle"></div>
-        ИИ анализирует базу кейсов...
-      </div>
-      <div id="aimatch-result" style="display:none;margin-top:20px"></div>
+  <!-- Favorites screen -->
+  <div class="screen" id="screen-favorites">
+    <div class="topbar">
+      <h2>Мои подборки</h2>
+      <button class="btn btn-secondary" onclick="showNewClientDialog()" style="display:flex;align-items:center;gap:6px">
+        <svg fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24" style="width:14px;height:14px"><path d="M12 5v14M5 12h14"/></svg>
+        Новый клиент
+      </button>
     </div>
+    <div id="favorites-body"></div>
   </div>
 
   <!-- Dashboard screen -->
@@ -497,8 +577,11 @@ function renderCard(c) {
   return `
   <div class="case-card" id="card-${c.id}" onclick="toggleCard('${c.id}',event)">
     <div style="background:#151E34;padding:12px 14px 10px;position:relative;border-radius:10px 10px 0 0">
-      <div style="font-size:15px;font-weight:700;color:#FAFAFA;line-height:1.35;padding-right:24px">${c.title}</div>
-      <button style="position:absolute;top:8px;right:10px;background:none;border:none;color:rgba(255,255,255,.6);font-size:18px;cursor:pointer;line-height:1;padding:0" onclick="event.stopPropagation();toggleCard('${c.id}',event)" title="Свернуть">×</button>
+      <div style="font-size:15px;font-weight:700;color:#FAFAFA;line-height:1.35;padding-right:52px">${c.title}</div>
+      <div style="position:absolute;top:8px;right:10px;display:flex;gap:4px;align-items:center">
+        <button class="star-btn ${isFav(c.id)?'active':''}" id="star-${c.id}" onclick="event.stopPropagation();toggleFav('${c.id}')" title="В избранное">${isFav(c.id)?'★':'☆'}</button>
+        <button style="background:none;border:none;color:rgba(255,255,255,.6);font-size:18px;cursor:pointer;line-height:1;padding:0" onclick="event.stopPropagation();toggleCard('${c.id}',event)" title="Свернуть">×</button>
+      </div>
       ${infoRow}
     </div>
     <div style="padding:10px 14px 8px">
@@ -508,7 +591,13 @@ function renderCard(c) {
         ${extraTags}
       </div>
       <div class="case-preview">${preview}</div>
-      <div class="case-footer"><span class="case-year">${c.year}</span></div>
+      <div class="case-footer">
+        <span class="case-year">${c.year}</span>
+        <div onclick="event.stopPropagation()" style="display:flex;align-items:center;gap:6px">
+          <span style="font-size:11px;color:var(--text3)">В презентацию</span>
+          <div class="case-check ${isPptxSelected(c.id)?'checked':''}" id="pptx-check-${c.id}" onclick="togglePptxCase('${c.id}',event)" title="Добавить в презентацию"></div>
+        </div>
+      </div>
     </div>
     <div class="expanded-body" style="padding:0 14px 14px">
       ${imgsHtml}
@@ -516,7 +605,9 @@ function renderCard(c) {
       <div class="expanded-actions">
         <button class="btn-ghost" onclick="event.stopPropagation();toggleCard('${c.id}',event)">Свернуть</button>
         <button class="btn btn-secondary" id="copy-${c.id}" onclick="event.stopPropagation();copyCase('${c.id}')">Скопировать</button>
-        <button class="btn btn-primary" onclick="event.stopPropagation();exportCasePDF('${c.id}')">📄 Экспорт в PDF</button>
+        <button class="btn btn-secondary" onclick="event.stopPropagation();shareCase('${c.id}')">🔗 Поделиться</button>
+        <button class="btn btn-secondary" onclick="event.stopPropagation();togglePptxCase('${c.id}',event)" id="pptx-btn-${c.id}" style="${isPptxSelected(c.id)?'background:#151E34;color:#fff;border-color:#151E34':''}">${isPptxSelected(c.id)?'✓ В презентации':'+ В презентацию'}</button>
+        <button class="btn btn-primary" onclick="event.stopPropagation();exportCasePDF('${c.id}')">📄 PDF</button>
       </div>
       <div class="pitch-box hidden" id="${pitchId}"></div>
     </div>
@@ -757,52 +848,6 @@ function copyCase(id) {
   function fb(txt){ const ta=document.createElement('textarea'); ta.value=txt; ta.style.cssText='position:fixed;opacity:0'; document.body.appendChild(ta); ta.select(); document.execCommand('copy'); document.body.removeChild(ta); }
 }
 
-async function doAIMatch() {
-  const q = document.getElementById('aimatch-query').value.trim();
-  if(!q) { document.getElementById('aimatch-query').style.borderColor='var(--accent2)'; return; }
-  const loadEl = document.getElementById('aimatch-loading');
-  const resultEl = document.getElementById('aimatch-result');
-  loadEl.style.display='block';
-  resultEl.style.display='none';
-
-  const allC = Object.values(ALL_CASES).flat();
-  const caseList = allC.map(c=>`[${c.id}] ${c.title} | ${c.type} | ${c.industry} | ${(c.tags||[]).join(',')} | ${(c.text||'').slice(0,200)}`).join('\n');
-
-  const prompt = `Ты эксперт патентного бюро ИИП по защите интеллектуальной собственности. Потенциальный клиент описал свой бизнес:\n"${q}"\n\nВот база реальных кейсов бюро (формат: [id] заголовок | тип | отрасль | теги | начало описания):\n${caseList}\n\nЗадача:\n1. Выбери 1-2 наиболее релевантных кейса для этого клиента.\n2. Для каждого кейса объясни кратко: почему он похож на ситуацию клиента и что это означает для его бизнеса конкретно.\n3. Дай 2-3 вопроса для уточнения на первой встрече с клиентом.\n\nОтвечай на русском. Упоминай конкретные id кейсов в формате [id].`;
-
-  try {
-    const resp = await fetch('https://api.anthropic.com/v1/messages', {
-      method:'POST',
-      headers:{'Content-Type':'application/json'},
-      body: JSON.stringify({ model:'claude-sonnet-4-6', max_tokens:1000, messages:[{role:'user',content:prompt}] })
-    });
-    const data = await resp.json();
-    const text = (data.content||[]).map(b=>b.text||'').join('');
-    const mentionedIds = [...text.matchAll(/\[([a-z]{2}\d+)\]/g)].map(m=>m[1]);
-    const matchedCases = allC.filter(c=>mentionedIds.includes(c.id));
-
-    let html = `<div style="background:var(--biscuit);border-radius:var(--radius-sm);padding:18px 20px;margin-bottom:16px">
-      <div style="font-size:13px;color:var(--text2);line-height:1.75;white-space:pre-wrap">${text.replace(/\[([a-z]{2}\d+)\]/g, '')}</div>
-    </div>`;
-
-    if(matchedCases.length) {
-      html += `<p style="font-size:12px;font-weight:600;color:var(--text3);text-transform:uppercase;letter-spacing:.07em;margin-bottom:10px">Найденные кейсы — нажмите для открытия:</p>`;
-      html += matchedCases.map(c=>`
-        <div onclick="showCaseFromSearch('${c.id}')" style="border:1.5px solid var(--border);border-radius:10px;padding:12px 14px;margin-bottom:8px;cursor:pointer;background:var(--surface);transition:.15s" onmouseover="this.style.borderColor='var(--accent2)'" onmouseout="this.style.borderColor='var(--border)'">
-          <div style="font-weight:700;font-size:14px;color:var(--text)">${c.title}</div>
-          <div style="font-size:11px;color:var(--text3);margin:3px 0">${c.type} · ${c.industry}</div>
-          <div style="font-size:12px;color:var(--text2);margin-top:4px">${(c.text||'').slice(0,160)}…</div>
-        </div>`).join('');
-    }
-    resultEl.innerHTML = html;
-    resultEl.style.display='block';
-  } catch(e) {
-    resultEl.innerHTML = `<p style="color:#c0392b;font-size:13px">Ошибка запроса к ИИ: ${e.message}</p>`;
-    resultEl.style.display='block';
-  }
-  loadEl.style.display='none';
-}
-
 function exportCasePDF(id) {
   const allC = Object.values(ALL_CASES).flat();
   const c = allC.find(x=>x.id===id);
@@ -896,10 +941,344 @@ body{font-family:'Manrope',sans-serif;background:#fff;color:#151E34}
   pdfWin.document.close();
 }
 
+// ===== SHARE =====
+function shareCase(id) {
+  const url = location.href.split('?')[0] + '?case=' + id;
+  if (navigator.clipboard) {
+    navigator.clipboard.writeText(url).then(showShareToast).catch(()=>{ fbCopy(url); showShareToast(); });
+  } else { fbCopy(url); showShareToast(); }
+  function fbCopy(t){ const ta=document.createElement('textarea'); ta.value=t; ta.style.cssText='position:fixed;opacity:0'; document.body.appendChild(ta); ta.select(); document.execCommand('copy'); document.body.removeChild(ta); }
+}
+function showShareToast() {
+  const t = document.getElementById('share-toast');
+  t.classList.add('show');
+  setTimeout(()=>t.classList.remove('show'), 2200);
+}
+
+// ===== FAVORITES =====
+const FAV_KEY = 'iip_favorites';
+const CLIENTS_KEY = 'iip_clients';
+function getFavs() { try { return JSON.parse(localStorage.getItem(FAV_KEY)||'{}'); } catch(e){ return {}; } }
+function saveFavs(f) { localStorage.setItem(FAV_KEY, JSON.stringify(f)); }
+function getClients() { try { return JSON.parse(localStorage.getItem(CLIENTS_KEY)||'[]'); } catch(e){ return []; } }
+function saveClients(c) { localStorage.setItem(CLIENTS_KEY, JSON.stringify(c)); }
+function isFav(id) { return !!getFavs()[id]; }
+
+function toggleFav(id) {
+  const favs = getFavs();
+  const btn = document.getElementById('star-'+id);
+  if (favs[id]) {
+    delete favs[id];
+    if(btn){ btn.textContent='☆'; btn.classList.remove('active'); }
+  } else {
+    favs[id] = { note:'', client:'', addedAt:Date.now() };
+    if(btn){ btn.textContent='★'; btn.classList.add('active'); }
+    const clients = getClients();
+    if(clients.length) showClientPicker(id);
+  }
+  saveFavs(favs);
+  updateFavNavCount();
+}
+
+function updateFavNavCount() {
+  const el = document.getElementById('fav-nav-count');
+  if(!el) return;
+  const count = Object.keys(getFavs()).length;
+  el.textContent = count > 0 ? count : '';
+}
+
+function showClientPicker(caseId) {
+  const clients = getClients();
+  if(!clients.length) return;
+  const favs = getFavs();
+  const existing = favs[caseId]?.client || '';
+  const old = document.getElementById('client-picker-'+caseId);
+  if(old) old.remove();
+  const wrap = document.createElement('div');
+  wrap.id = 'client-picker-'+caseId;
+  wrap.style.cssText = 'position:fixed;top:50%;left:50%;transform:translate(-50%,-50%);background:#fff;border-radius:12px;padding:20px;box-shadow:0 8px 32px rgba(21,30,52,.2);z-index:5000;min-width:280px';
+  wrap.innerHTML = `<div style="font-size:14px;font-weight:700;color:#151E34;margin-bottom:12px">Добавить в подборку клиента</div>
+    ${clients.map(cl=>`<div onclick="assignToClient('${caseId}','${cl.replace(/'/g,"\\'")}');document.getElementById('client-picker-${caseId}').remove()"
+      style="padding:9px 12px;border-radius:8px;cursor:pointer;font-size:13px;color:#151E34;border:1.5px solid ${existing===cl?'#31477A':'#E5E9EF'};background:${existing===cl?'#ECF1F3':'#fff'};margin-bottom:6px"
+      onmouseover="this.style.background='#F0F4F8'" onmouseout="this.style.background='${existing===cl?'#ECF1F3':'#fff'}'">${cl}</div>`).join('')}
+    <button onclick="document.getElementById('client-picker-${caseId}').remove()" style="width:100%;margin-top:6px;padding:8px;border:1.5px solid #E5E9EF;border-radius:8px;background:#fff;cursor:pointer;font-family:'Manrope',sans-serif;font-size:12px">Без клиента</button>`;
+  document.body.appendChild(wrap);
+  setTimeout(()=>{
+    const handler = e => { if(!wrap.contains(e.target)){ wrap.remove(); document.removeEventListener('click',handler); }};
+    document.addEventListener('click', handler);
+  }, 100);
+}
+
+function assignToClient(caseId, clientName) {
+  const favs = getFavs(); if(favs[caseId]) favs[caseId].client = clientName; saveFavs(favs);
+  if(document.getElementById('screen-favorites').classList.contains('active')) renderFavorites();
+}
+
+function showNewClientDialog() {
+  const name = prompt('Имя или название клиента:');
+  if(!name||!name.trim()) return;
+  const clients = getClients();
+  if(!clients.includes(name.trim())){ clients.push(name.trim()); saveClients(clients); }
+  renderFavorites();
+}
+
+function renderFavorites() {
+  const body = document.getElementById('favorites-body');
+  const favs = getFavs();
+  const clients = getClients();
+  const allC = Object.values(ALL_CASES).flat();
+  const favIds = Object.keys(favs);
+  updateFavNavCount();
+
+  if(!favIds.length){
+    body.innerHTML=`<div class="fav-empty"><svg fill="none" stroke="currentColor" stroke-width="1.3" viewBox="0 0 24 24"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg><p style="font-size:14px;font-weight:600;margin-bottom:6px">Пока нет избранных кейсов</p><p style="font-size:13px">Нажмите ☆ на любом кейсе, чтобы добавить его сюда</p></div>`;
+    return;
+  }
+
+  const groups = {}; clients.forEach(cl=>groups[cl]=[]); groups['__none__']=[];
+  favIds.forEach(id=>{
+    const fav=favs[id]; const cl=fav.client&&clients.includes(fav.client)?fav.client:'__none__';
+    const caseObj=allC.find(c=>c.id===id); if(caseObj) groups[cl].push({id,caseObj,note:fav.note||''});
+  });
+
+  let html='';
+  [...clients,'__none__'].forEach(cl=>{
+    const items=groups[cl]; if(!items||!items.length) return;
+    const label=cl==='__none__'?'Без клиента':cl; const isNone=cl==='__none__';
+    html+=`<div class="client-group">
+      <div class="client-group-header" onclick="this.nextElementSibling.style.display=this.nextElementSibling.style.display==='none'?'block':'none'">
+        <div class="client-group-name">${isNone?'📁 ':'👤 '}${label}</div>
+        <div class="client-group-count">${items.length} кейс${items.length===1?'':'ов'}</div>
+        ${!isNone?`<button onclick="event.stopPropagation();renameClient('${cl}')" style="background:none;border:none;font-size:12px;color:var(--text3);cursor:pointer;padding:2px 6px">✏️</button>
+        <button onclick="event.stopPropagation();deleteClient('${cl}')" style="background:none;border:none;font-size:12px;color:var(--text3);cursor:pointer;padding:2px 6px">🗑</button>`:''}
+      </div>
+      <div class="client-group-body">
+        ${items.map(({id,caseObj,note})=>`
+          <div class="fav-case-row">
+            <div class="fav-case-info" onclick="showCaseFromSearch('${id}')">
+              <div class="fav-case-title">${caseObj.title}</div>
+              <div class="fav-case-meta">${caseObj.type} · ${caseObj.industry} · ${caseObj.year}</div>
+            </div>
+            <button class="fav-remove" onclick="removeFav('${id}')" title="Убрать">×</button>
+          </div>
+          <textarea class="fav-note" placeholder="Заметка по этому кейсу для клиента..." onchange="saveFavNote('${id}',this.value)">${note}</textarea>
+          ${isNone&&clients.length?`<select onchange="assignToClient('${id}',this.value);renderFavorites()" style="font-size:11px;padding:3px 6px;border:1px solid var(--border);border-radius:6px;font-family:'Manrope',sans-serif;color:var(--text3);background:var(--surface);margin-top:4px;margin-bottom:4px">
+            <option value="">Назначить клиента...</option>
+            ${clients.map(c=>`<option value="${c}">${c}</option>`).join('')}
+          </select>`:''}
+        `).join('')}
+      </div>
+    </div>`;
+  });
+
+  html+=`<div class="new-client-row">
+    <input class="new-client-input" id="new-client-inp" placeholder="Имя нового клиента..." onkeydown="if(event.key==='Enter')addClientFromInput()">
+    <button class="btn btn-secondary" onclick="addClientFromInput()">+ Добавить клиента</button>
+  </div>`;
+  body.innerHTML=html;
+}
+
+function addClientFromInput(){
+  const inp=document.getElementById('new-client-inp'); if(!inp||!inp.value.trim()) return;
+  const clients=getClients(); if(!clients.includes(inp.value.trim())){clients.push(inp.value.trim());saveClients(clients);} renderFavorites();
+}
+function saveFavNote(id,note){ const favs=getFavs(); if(favs[id]){favs[id].note=note;saveFavs(favs);} }
+function removeFav(id){
+  const favs=getFavs(); delete favs[id]; saveFavs(favs);
+  const btn=document.getElementById('star-'+id); if(btn){btn.textContent='☆';btn.classList.remove('active');}
+  renderFavorites(); updateFavNavCount();
+}
+function renameClient(old){
+  const name=prompt('Новое имя клиента:',old); if(!name||!name.trim()||name.trim()===old) return;
+  const clients=getClients(); const idx=clients.indexOf(old); if(idx>-1) clients[idx]=name.trim(); saveClients(clients);
+  const favs=getFavs(); Object.values(favs).forEach(f=>{if(f.client===old)f.client=name.trim();}); saveFavs(favs); renderFavorites();
+}
+function deleteClient(name){
+  if(!confirm(`Удалить группу "${name}"? Кейсы останутся в избранном.`)) return;
+  saveClients(getClients().filter(c=>c!==name));
+  const favs=getFavs(); Object.values(favs).forEach(f=>{if(f.client===name)f.client='';}); saveFavs(favs); renderFavorites();
+}
+
+// ===== PPTX SELECTION =====
+let pptxSelected = [];
+
+function isPptxSelected(id){ return pptxSelected.includes(id); }
+
+function togglePptxCase(id, event){
+  if(event) event.stopPropagation();
+  const allC=Object.values(ALL_CASES).flat();
+  const c=allC.find(x=>x.id===id); if(!c) return;
+  if(pptxSelected.includes(id)) pptxSelected=pptxSelected.filter(x=>x!==id);
+  else pptxSelected.push(id);
+  const chk=document.getElementById('pptx-check-'+id);
+  if(chk) chk.classList.toggle('checked',pptxSelected.includes(id));
+  const btn=document.getElementById('pptx-btn-'+id);
+  if(btn){ btn.textContent=pptxSelected.includes(id)?'✓ В презентации':'+ В презентацию'; btn.style.cssText=pptxSelected.includes(id)?'background:#151E34;color:#fff;border-color:#151E34':''; }
+  updatePptxBar();
+}
+
+function updatePptxBar(){
+  const bar=document.getElementById('pptx-bar');
+  const countEl=document.getElementById('pptx-bar-count');
+  const namesEl=document.getElementById('pptx-bar-names');
+  const n=pptxSelected.length;
+  if(!n){ bar.classList.remove('visible'); return; }
+  bar.classList.add('visible');
+  const suffix=n===1?'кейс':n<5?'кейса':'кейсов';
+  countEl.textContent=`${n} ${suffix} выбрано`;
+  const allC=Object.values(ALL_CASES).flat();
+  namesEl.textContent=pptxSelected.map(id=>{ const c=allC.find(x=>x.id===id); return c?c.title.slice(0,35)+'…':''; }).join(' · ');
+}
+
+function clearPptxSelection(){
+  pptxSelected.forEach(id=>{
+    const chk=document.getElementById('pptx-check-'+id); if(chk) chk.classList.remove('checked');
+    const btn=document.getElementById('pptx-btn-'+id); if(btn){btn.textContent='+ В презентацию';btn.style.cssText='';}
+  });
+  pptxSelected=[]; updatePptxBar();
+}
+
+function openPptxModal(){
+  if(!pptxSelected.length) return;
+  document.getElementById('pptx-modal-count').textContent=pptxSelected.length;
+  document.getElementById('pptx-modal').classList.add('open');
+  document.getElementById('pptx-progress').style.display='none';
+  const btn=document.getElementById('pptx-gen-btn'); btn.disabled=false; btn.textContent='📊 Скачать .pptx';
+}
+function closePptxModal(){ document.getElementById('pptx-modal').classList.remove('open'); }
+
+// ===== PPTX GENERATOR =====
+async function generatePptx(){
+  if(typeof PptxGenJS==='undefined'){ alert('Библиотека не загружена. Проверьте интернет-соединение.'); return; }
+  const title=document.getElementById('pptx-title-input').value.trim()||'Подборка кейсов ИИП';
+  const btn=document.getElementById('pptx-gen-btn');
+  const progressEl=document.getElementById('pptx-progress');
+  const progressFill=document.getElementById('pptx-progress-fill');
+  const progressText=document.getElementById('pptx-progress-text');
+  btn.disabled=true; btn.textContent='Генерация...';
+  progressEl.style.display='block'; progressFill.style.width='10%';
+
+  const allC=Object.values(ALL_CASES).flat();
+  const selCases=pptxSelected.map(id=>allC.find(c=>c.id===id)).filter(Boolean);
+  const pres=new PptxGenJS();
+  pres.layout='LAYOUT_16x9'; pres.title=title;
+
+  const BG='F4F5F7',WHITE='FFFFFF',DARK='151E34',DARK2='1F2C4D',ACCENT='31477A',AZURE='B3C7D0',BISCUIT='EADED1',MUTED='6B7A99';
+
+  progressText.textContent='Создаём титульный слайд...'; progressFill.style.width='15%';
+
+  // TITLE SLIDE
+  {
+    const sl=pres.addSlide(); sl.background={color:WHITE};
+    sl.addShape(pres.shapes.RECTANGLE,{x:0,y:0,w:4.2,h:5.625,fill:{color:DARK},line:{color:DARK}});
+    sl.addShape(pres.shapes.OVAL,{x:-.8,y:3.5,w:3.5,h:3.5,fill:{color:ACCENT,transparency:70},line:{color:ACCENT,transparency:70}});
+    sl.addShape(pres.shapes.OVAL,{x:2.2,y:-.8,w:2.5,h:2.5,fill:{color:AZURE,transparency:82},line:{color:AZURE,transparency:82}});
+    sl.addText('ИИП',{x:.4,y:.45,w:3.4,h:.75,fontSize:32,fontFace:'Calibri',bold:true,color:WHITE,margin:0});
+    sl.addText('Институт Инноваций и Права',{x:.4,y:1.1,w:3.4,h:.4,fontSize:11,fontFace:'Calibri',color:AZURE,margin:0});
+    sl.addText(title,{x:4.6,y:.7,w:5.1,h:1.7,fontSize:34,fontFace:'Cambria',bold:true,color:DARK,margin:0,valign:'top'});
+    sl.addText('Реальные результаты наших доверителей',{x:4.6,y:2.55,w:5.1,h:.45,fontSize:14,fontFace:'Calibri',color:MUTED,italic:true,margin:0});
+    [`${selCases.length}`,'7+','100%'].forEach((s,i)=>{
+      const lbs=['кейса выбрано','лет на рынке','гарантия'];
+      sl.addText(s,{x:4.6+i*1.8,y:3.3,w:1.6,h:.65,fontSize:28,fontFace:'Cambria',bold:true,color:DARK,align:'center',margin:0});
+      sl.addText(lbs[i],{x:4.6+i*1.8,y:3.9,w:1.6,h:.38,fontSize:10,fontFace:'Calibri',color:MUTED,align:'center',margin:0});
+    });
+    sl.addText(new Date().toLocaleDateString('ru-RU',{day:'numeric',month:'long',year:'numeric'}),{x:4.6,y:4.95,w:5.1,h:.35,fontSize:10,fontFace:'Calibri',color:MUTED,margin:0});
+  }
+
+  // CASE SLIDES
+  const SW=2.55,CX=2.95,CW=6.75,SH=5.625,HH=1.05,BY=HH+.15,BH=SH-HH-.22-.28;
+
+  function buildRuns(text){
+    const lines=text.split('\n').filter(l=>l.trim()); const runs=[];
+    lines.forEach((line)=>{
+      const t=line.trim(); const isBullet=t.startsWith('•')||t.startsWith('·');
+      const isHdr=!isBullet&&/^[А-ЯЁA-Z]/.test(t)&&(t.endsWith(':')||t.endsWith('?'));
+      if(isBullet) runs.push({text:t.slice(2).trim(),options:{bullet:true,fontSize:10.5,color:DARK2,fontFace:'Calibri',paraSpaceAfter:1,breakLine:true}});
+      else if(isHdr) runs.push({text:t,options:{bold:true,fontSize:10.5,color:ACCENT,fontFace:'Calibri',paraSpaceBefore:4,paraSpaceAfter:1,breakLine:true}});
+      else runs.push({text:t,options:{fontSize:10.5,color:DARK2,fontFace:'Calibri',paraSpaceAfter:2,breakLine:true}});
+    });
+    if(runs.length) delete runs[runs.length-1].options.breakLine;
+    return runs;
+  }
+
+  function addCaseSlide(c,text,idx,lbl){
+    const sl=pres.addSlide(); sl.background={color:BG};
+    sl.addShape(pres.shapes.RECTANGLE,{x:0,y:0,w:10,h:HH,fill:{color:DARK},line:{color:DARK}});
+    sl.addText(`#${String(idx+1).padStart(2,'0')}`,{x:.3,y:0,w:.85,h:HH,fontSize:18,fontFace:'Cambria',bold:true,color:AZURE,valign:'middle',margin:0});
+    sl.addText(c.title+(lbl?'  '+lbl:''),{x:1.15,y:0,w:6.85,h:HH,fontSize:14,fontFace:'Cambria',bold:true,color:WHITE,valign:'middle',margin:0});
+    sl.addShape(pres.shapes.ROUNDED_RECTANGLE,{x:8.05,y:.17,w:1.7,h:.72,fill:{color:ACCENT},line:{color:ACCENT},rectRadius:.08});
+    sl.addText(c.type||'',{x:8.05,y:.17,w:1.7,h:.72,fontSize:9,fontFace:'Calibri',bold:true,color:WHITE,align:'center',valign:'middle',margin:2});
+    sl.addShape(pres.shapes.RECTANGLE,{x:0,y:HH,w:SW,h:SH-HH,fill:{color:DARK},line:{color:DARK}});
+    const mH=.88,mG=.1;
+    (c.metrics||[]).forEach((m,mi)=>{
+      const my=BY+.1+mi*(mH+mG);
+      sl.addShape(pres.shapes.ROUNDED_RECTANGLE,{x:.15,y:my,w:SW-.3,h:mH,fill:{color:ACCENT,transparency:30},line:{color:AZURE,transparency:50},rectRadius:.1});
+      sl.addText(m.v,{x:.15,y:my+.05,w:SW-.3,h:.5,fontSize:22,fontFace:'Cambria',bold:true,color:WHITE,align:'center',margin:0});
+      sl.addText(m.l,{x:.15,y:my+.54,w:SW-.3,h:.28,fontSize:10,fontFace:'Calibri',color:AZURE,align:'center',margin:0});
+    });
+    const am=BY+.1+(c.metrics||[]).length*(mH+mG)+.15;
+    sl.addShape(pres.shapes.ROUNDED_RECTANGLE,{x:.15,y:am,w:SW-.3,h:.33,fill:{color:BISCUIT},line:{color:BISCUIT},rectRadius:.06});
+    sl.addText(`${c.industry||''} · ${c.year||''}`,{x:.15,y:am,w:SW-.3,h:.33,fontSize:9.5,fontFace:'Calibri',color:DARK2,align:'center',valign:'middle',margin:0});
+    (c.tags||[]).slice(0,4).forEach((tag,ti)=>{
+      const ty=am+.42+ti*.35; if(ty+.28>SH-.28) return;
+      sl.addShape(pres.shapes.ROUNDED_RECTANGLE,{x:.15,y:ty,w:SW-.3,h:.28,fill:{color:'1A2744'},line:{color:AZURE,transparency:60},rectRadius:.05});
+      sl.addText(tag,{x:.15,y:ty,w:SW-.3,h:.28,fontSize:9,fontFace:'Calibri',color:AZURE,align:'center',valign:'middle',margin:0});
+    });
+    sl.addShape(pres.shapes.ROUNDED_RECTANGLE,{x:CX,y:BY,w:CW,h:BH,fill:{color:WHITE},line:{color:'E5E9EF'},rectRadius:.12,shadow:{type:'outer',color:'000000',blur:8,offset:2,angle:45,opacity:.07}});
+    sl.addText(buildRuns(text),{x:CX+.22,y:BY+.12,w:CW-.44,h:BH-.18,valign:'top',margin:0});
+    sl.addShape(pres.shapes.RECTANGLE,{x:0,y:5.41,w:10,h:.215,fill:{color:'E8EBF0'},line:{color:'E8EBF0'}});
+    sl.addText('inilaw.com  ·  ИИП — Институт Инноваций и Права',{x:.3,y:5.41,w:9.4,h:.215,fontSize:9,fontFace:'Calibri',color:MUTED,align:'center',valign:'middle',margin:0});
+  }
+
+  for(let i=0;i<selCases.length;i++){
+    const c=selCases[i];
+    progressText.textContent=`Кейс ${i+1}/${selCases.length}: ${c.title.slice(0,35)}...`;
+    progressFill.style.width=`${20+60*(i/selCases.length)}%`;
+    const ft=c.text||''; const ns=ft.length>1200;
+    let t1=ft,t2='';
+    if(ns){ const cp=ft.lastIndexOf('\n\n',1200); const ca=cp>600?cp:ft.lastIndexOf('\n',1200); const p2=ft.slice(ca>0?ca:1200).trim(); if(p2.length>200){t1=ft.slice(0,ca>0?ca:1200).trim();t2=p2;} }
+    addCaseSlide(c,t1,i,ns&&t2?'(часть 1)':'');
+    if(t2) addCaseSlide(c,t2,i,'(продолжение)');
+    await new Promise(r=>setTimeout(r,5));
+  }
+
+  progressText.textContent='Финальный слайд...'; progressFill.style.width='90%';
+
+  // FINAL SLIDE
+  {
+    const sl=pres.addSlide(); sl.background={color:WHITE};
+    sl.addShape(pres.shapes.RECTANGLE,{x:0,y:0,w:3.5,h:5.625,fill:{color:DARK},line:{color:DARK}});
+    sl.addShape(pres.shapes.OVAL,{x:-1.2,y:3.2,w:4.2,h:4.2,fill:{color:ACCENT,transparency:75},line:{color:ACCENT,transparency:75}});
+    sl.addText('ИИП',{x:.3,y:.4,w:2.9,h:.7,fontSize:28,fontFace:'Calibri',bold:true,color:WHITE,margin:0});
+    sl.addText('Наши достижения',{x:.3,y:1.0,w:2.9,h:.45,fontSize:12,fontFace:'Calibri',color:AZURE,margin:0});
+    ['🏆 Право-300: ТОП-50','🥇 Коммерсант 2026','🥈 Архимед 2026','🎖 IP Russia Awards','📋 Российская Газета','🏅 Диплом I степени'].forEach((a,i)=>{
+      sl.addText(a,{x:.25,y:1.65+i*.47,w:3.0,h:.38,fontSize:11,fontFace:'Calibri',color:i%2===0?WHITE:AZURE,margin:0});
+    });
+    sl.addText('Готовы защитить\nваш бизнес',{x:3.9,y:.4,w:5.8,h:1.5,fontSize:32,fontFace:'Cambria',bold:true,color:DARK,margin:0});
+    sl.addText('Запишитесь на бесплатную консультацию',{x:3.9,y:2.05,w:5.8,h:.45,fontSize:14,fontFace:'Calibri',color:MUTED,margin:0});
+    [{label:'Сайт',val:'inilaw.com'},{label:'Email',val:'hello@inilaw.com'},{label:'Телефон',val:'8 (499) 110-93-54'}].forEach((ct,i)=>{
+      sl.addShape(pres.shapes.ROUNDED_RECTANGLE,{x:3.9+i*2.0,y:2.7,w:1.85,h:.85,fill:{color:BG},line:{color:AZURE},rectRadius:.1});
+      sl.addText(ct.label,{x:3.9+i*2.0,y:2.74,w:1.85,h:.3,fontSize:9,fontFace:'Calibri',color:MUTED,align:'center',margin:0});
+      sl.addText(ct.val,{x:3.9+i*2.0,y:3.0,w:1.85,h:.42,fontSize:10,fontFace:'Calibri',bold:true,color:DARK,align:'center',margin:0});
+    });
+    sl.addText('Партнёры: ВОИС (WIPO)  ·  Евразийское патентное ведомство  ·  Сколково  ·  МИК',{x:3.9,y:3.75,w:5.8,h:.38,fontSize:10,fontFace:'Calibri',color:MUTED,margin:0});
+    sl.addShape(pres.shapes.ROUNDED_RECTANGLE,{x:3.9,y:4.3,w:5.8,h:.72,fill:{color:DARK},line:{color:DARK},rectRadius:.1});
+    sl.addText('Гарантируем результат или повторим работу за свой счёт',{x:3.9,y:4.3,w:5.8,h:.72,fontSize:13,fontFace:'Calibri',bold:true,color:WHITE,align:'center',valign:'middle',margin:0});
+  }
+
+  progressFill.style.width='98%'; progressText.textContent='Сохраняем файл...';
+  const safeTitle=title.replace(/[^а-яёА-ЯЁa-zA-Z0-9\s_-]/g,'').trim()||'ИИП_Подборка';
+  await pres.writeFile({fileName:`${safeTitle}.pptx`});
+  progressFill.style.width='100%'; progressText.textContent='✓ Готово! Файл скачан.';
+  btn.disabled=false; btn.textContent='📊 Скачать ещё раз';
+}
+
 loadCases();
 renderFilters();
 updateTabCounts();
 renderCases();
+updateFavNavCount();
+handleDeepLink();
 </script>
 </body>
 </html>
