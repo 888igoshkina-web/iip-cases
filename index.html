@@ -1389,56 +1389,77 @@ async function generatePptx(){
     return runs;
   }
 
-  function addCaseSlide(c,text,idx,lbl,certImg){
+  function addCaseSlide(c,text,idx,lbl,certImg,certRatio){
     const sl=pres.addSlide(); sl.background={color:BG};
-    sl.addShape(pres.shapes.RECTANGLE,{x:0,y:0,w:10,h:HH,fill:{color:DARK},line:{color:DARK}});
-    sl.addText(`#${String(idx+1).padStart(2,'0')}`,{x:.3,y:0,w:.85,h:HH,fontSize:18,fontFace:'Cambria',bold:true,color:AZURE,valign:'middle',margin:0});
-    sl.addText(c.title+(lbl?'  '+lbl:''),{x:1.15,y:0,w:6.85,h:HH,fontSize:14,fontFace:'Cambria',bold:true,color:WHITE,valign:'middle',margin:0});
-    sl.addShape(pres.shapes.ROUNDED_RECTANGLE,{x:8.05,y:.17,w:1.7,h:.72,fill:{color:ACCENT},line:{color:ACCENT},rectRadius:.08});
-    sl.addText(c.type||'',{x:8.05,y:.17,w:1.7,h:.72,fontSize:9,fontFace:'Calibri',bold:true,color:WHITE,align:'center',valign:'middle',margin:2});
-    sl.addShape(pres.shapes.RECTANGLE,{x:0,y:HH,w:SW,h:SH-HH,fill:{color:DARK},line:{color:DARK}});
-    const mH=.88,mG=.1;
-    (c.metrics||[]).forEach((m,mi)=>{
-      const my=BY+.1+mi*(mH+mG);
-      sl.addShape(pres.shapes.ROUNDED_RECTANGLE,{x:.15,y:my,w:SW-.3,h:mH,fill:{color:ACCENT,transparency:30},line:{color:AZURE,transparency:50},rectRadius:.1});
-      sl.addText(m.v,{x:.15,y:my+.05,w:SW-.3,h:.5,fontSize:22,fontFace:'Cambria',bold:true,color:WHITE,align:'center',margin:0});
-      sl.addText(m.l,{x:.15,y:my+.54,w:SW-.3,h:.28,fontSize:10,fontFace:'Calibri',color:AZURE,align:'center',margin:0});
-    });
-    const am=BY+.1+(c.metrics||[]).length*(mH+mG)+.15;
-    sl.addShape(pres.shapes.ROUNDED_RECTANGLE,{x:.15,y:am,w:SW-.3,h:.33,fill:{color:BISCUIT},line:{color:BISCUIT},rectRadius:.06});
-    sl.addText(`${c.industry||''} · ${c.year||''}`,{x:.15,y:am,w:SW-.3,h:.33,fontSize:9.5,fontFace:'Calibri',color:DARK2,align:'center',valign:'middle',margin:0});
-    (c.tags||[]).slice(0,4).forEach((tag,ti)=>{
-      const ty=am+.42+ti*.35; if(ty+.28>SH-.28) return;
-      sl.addShape(pres.shapes.ROUNDED_RECTANGLE,{x:.15,y:ty,w:SW-.3,h:.28,fill:{color:'1A2744'},line:{color:AZURE,transparency:60},rectRadius:.05});
-      sl.addText(tag,{x:.15,y:ty,w:SW-.3,h:.28,fontSize:9,fontFace:'Calibri',color:AZURE,align:'center',valign:'middle',margin:0});
-    });
-    // If cert image: split content area — text left, image right
-    if(certImg){
-      const TW=4.55, IW=2.0, GAP=.12;
-      sl.addShape(pres.shapes.ROUNDED_RECTANGLE,{x:CX,y:BY,w:TW,h:BH,fill:{color:WHITE},line:{color:'E5E9EF'},rectRadius:.12,shadow:{type:'outer',color:'000000',blur:8,offset:2,angle:45,opacity:.07}});
-      sl.addText(buildRuns(text),{x:CX+.18,y:BY+.12,w:TW-.36,h:BH-.18,valign:'top',margin:0});
-      const IX=CX+TW+GAP, IH=BH;
-      sl.addShape(pres.shapes.ROUNDED_RECTANGLE,{x:IX,y:BY,w:IW,h:IH,fill:{color:'F8F9FA'},line:{color:'E5E9EF'},rectRadius:.1});
-      sl.addText('Свидетельство',{x:IX,y:BY+.08,w:IW,h:.22,fontSize:7.5,fontFace:'Calibri',color:MUTED,align:'center',margin:0});
-      sl.addImage({data:certImg,x:IX+.08,y:BY+.32,w:IW-.16,h:IH-.45});
-    } else {
-      sl.addShape(pres.shapes.ROUNDED_RECTANGLE,{x:CX,y:BY,w:CW,h:BH,fill:{color:WHITE},line:{color:'E5E9EF'},rectRadius:.12,shadow:{type:'outer',color:'000000',blur:8,offset:2,angle:45,opacity:.07}});
-      sl.addText(buildRuns(text),{x:CX+.22,y:BY+.12,w:CW-.44,h:BH-.18,valign:'top',margin:0});
+    // ── Header bar ──────────────────────────────────────────────────────────
+    const HH2=1.35;
+    sl.addShape(pres.shapes.RECTANGLE,{x:0,y:0,w:10,h:HH2,fill:{color:DARK},line:{color:DARK}});
+    sl.addText(`#${String(idx+1).padStart(2,'0')}`,{x:.25,y:0,w:.85,h:.75,fontSize:18,fontFace:'Cambria',bold:true,color:AZURE,valign:'middle',margin:0});
+    sl.addText(c.title+(lbl?'  '+lbl:''),{x:1.15,y:0,w:7.5,h:.75,fontSize:14,fontFace:'Cambria',bold:true,color:WHITE,valign:'middle',margin:0});
+    sl.addShape(pres.shapes.ROUNDED_RECTANGLE,{x:8.75,y:.12,w:1.0,h:.55,fill:{color:ACCENT},line:{color:ACCENT},rectRadius:.07});
+    sl.addText(c.type||'',{x:8.75,y:.12,w:1.0,h:.55,fontSize:8,fontFace:'Calibri',bold:true,color:WHITE,align:'center',valign:'middle',margin:1});
+    // ── Subtitle row: срок + МКТУ under title ───────────────────────────────
+    const subItems=[];
+    const srokM=(c.metrics||[]).find(m=>m.l==='срок');
+    if(srokM) subItems.push({label:'срок',val:srokM.v});
+    if(c.mktu&&c.mktu.length) subItems.push({label:'МКТУ',val:'кл. '+c.mktu.join(', ')});
+    if(subItems.length){
+      let sx=1.15;
+      subItems.forEach(it=>{
+        const pill=it.label+': '+it.val;
+        const pw=Math.min(pill.length*0.075+0.25, 2.8);
+        sl.addShape(pres.shapes.ROUNDED_RECTANGLE,{x:sx,y:.82,w:pw,h:.36,fill:{color:'1A2744'},line:{color:AZURE,transparency:50},rectRadius:.06});
+        sl.addText(pill,{x:sx,y:.82,w:pw,h:.36,fontSize:9,fontFace:'Calibri',color:AZURE,align:'center',valign:'middle',margin:0});
+        sx+=pw+.1;
+      });
     }
+    // ── Content area (full width, no sidebar) ───────────────────────────────
+    const BY2=HH2+.1, BH2=SH-HH2-.1-.22-.1;
+    if(certImg){
+      const TW2=6.55, IW2=2.1, GAP2=.15, CX2=.3;
+      sl.addShape(pres.shapes.ROUNDED_RECTANGLE,{x:CX2,y:BY2,w:TW2,h:BH2,fill:{color:WHITE},line:{color:'E5E9EF'},rectRadius:.12,shadow:{type:'outer',color:'000000',blur:8,offset:2,angle:45,opacity:.07}});
+      sl.addText(buildRuns(text),{x:CX2+.18,y:BY2+.12,w:TW2-.36,h:BH2-.18,valign:'top',margin:0,shrinkTxOnOverflow:true});
+      const IX2=CX2+TW2+GAP2;
+      sl.addShape(pres.shapes.ROUNDED_RECTANGLE,{x:IX2,y:BY2,w:IW2,h:BH2,fill:{color:'F8F9FA'},line:{color:'E5E9EF'},rectRadius:.1});
+      sl.addText('Свидетельство',{x:IX2,y:BY2+.08,w:IW2,h:.22,fontSize:7.5,fontFace:'Calibri',color:MUTED,align:'center',margin:0});
+      const _maxW=IW2-.16,_maxH=BH2-.38,_r=certRatio||(IW2-.16)/(BH2-.38);
+      const _iw=(_maxW/_r<=_maxH)?_maxW:_maxH*_r,_ih=_iw/_r;
+      sl.addImage({data:certImg,x:IX2+(IW2-_iw)/2,y:BY2+.32+(_maxH-_ih)/2,w:_iw,h:_ih});
+    } else {
+      sl.addShape(pres.shapes.ROUNDED_RECTANGLE,{x:.3,y:BY2,w:9.4,h:BH2,fill:{color:WHITE},line:{color:'E5E9EF'},rectRadius:.12,shadow:{type:'outer',color:'000000',blur:8,offset:2,angle:45,opacity:.07}});
+      sl.addText(buildRuns(text),{x:.48,y:BY2+.12,w:9.04,h:BH2-.18,valign:'top',margin:0,shrinkTxOnOverflow:true});
+    }
+    // ── Footer ───────────────────────────────────────────────────────────────
     sl.addShape(pres.shapes.RECTANGLE,{x:0,y:5.41,w:10,h:.215,fill:{color:'E8EBF0'},line:{color:'E8EBF0'}});
     sl.addText('inilaw.com  ·  ИИП — Институт Инноваций и Права',{x:.3,y:5.41,w:9.4,h:.215,fontSize:9,fontFace:'Calibri',color:MUTED,align:'center',valign:'middle',margin:0});
   }
+
 
   for(let i=0;i<selCases.length;i++){
     const c=selCases[i];
     progressText.textContent=`Кейс ${i+1}/${selCases.length}: ${c.title.slice(0,35)}...`;
     progressFill.style.width=`${20+60*(i/selCases.length)}%`;
-    const ft=c.text||''; const ns=ft.length>1200;
-    let t1=ft,t2='';
-    if(ns){ const cp=ft.lastIndexOf('\n\n',1200); const ca=cp>600?cp:ft.lastIndexOf('\n',1200); const p2=ft.slice(ca>0?ca:1200).trim(); if(p2.length>200){t1=ft.slice(0,ca>0?ca:1200).trim();t2=p2;} }
+    function splitText(txt,maxLen){
+      const parts=[];let rem=txt.trim();
+      while(rem.length>maxLen){
+        let cut=rem.lastIndexOf('\n\n',maxLen);
+        if(cut<maxLen*0.5) cut=rem.lastIndexOf('\n',maxLen);
+        if(cut<maxLen*0.3) cut=maxLen;
+        parts.push(rem.slice(0,cut).trim());
+        rem=rem.slice(cut).trim();
+      }
+      if(rem) parts.push(rem);
+      return parts;
+    }
+    const ft=c.text||'';
+    const parts=ft.length>950?splitText(ft,950):[ft];
     const firstImg=(c.images&&c.images.length)?c.images[0]:null;
-    addCaseSlide(c,t1,i,ns&&t2?'(часть 1)':'',firstImg);
-    if(t2) addCaseSlide(c,t2,i,'(продолжение)',null);
+    let firstImgRatio=null;
+    if(firstImg){firstImgRatio=await new Promise(res=>{const tmp=new Image();tmp.onload=()=>res(tmp.naturalWidth/tmp.naturalHeight);tmp.onerror=()=>res(null);tmp.src=firstImg;});}
+    for(let pi=0;pi<parts.length;pi++){
+      const lbl=parts.length===1?'':pi===0?'(часть 1)':pi===parts.length-1?'(продолжение)':'(часть '+(pi+1)+')';
+      addCaseSlide(c,parts[pi],i,lbl,pi===0?firstImg:null,pi===0?firstImgRatio:null);
+    }
 
     await new Promise(r=>setTimeout(r,5));
   }
